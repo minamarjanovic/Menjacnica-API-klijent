@@ -26,21 +26,20 @@ public class JsonRatesAPIKomunikacija {
 		for (int i = 0; i < naziviValuta.length; i++) {
 			String url = jsonRatesURL + "?" +
 					"from=" + naziviValuta[i] +
-					"&to=RSD"+
-					"&apiKey=" + appKey;		
+					"&to=RSD&apiKey=" + appKey;		
+			Gson gson = new GsonBuilder().create();
+			
 			try {
-				String result = sendGet(url);
 				
-				Gson gson = new GsonBuilder().create();
-				JsonObject jsonResult = gson.fromJson(result, JsonObject.class);
+				JsonObject result = gson.fromJson(sendGet(url), JsonObject.class);
 				
 				Valuta val = new Valuta();
 				
 				val = new Valuta();
-				val.setNaziv(naziviValuta[i]);
-				val.setKurs(Double.parseDouble(jsonResult.get("rate").getAsString()));
+				val.setNaziv(result.get("from").getAsString());
+				val.setKurs(result.get("rate").getAsDouble());
 				
-				valute.add(val);
+				valute.add(val); 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -76,3 +75,5 @@ public class JsonRatesAPIKomunikacija {
 	
 		
 }
+
+
